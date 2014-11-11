@@ -15,16 +15,6 @@ module RolloutControl
       head 204
     end
 
-    def activate
-      rollout.activate(feature)
-      head 204
-    end
-
-    def deactivate
-      rollout.deactivate(feature)
-      head 204
-    end
-
     private
 
     def feature

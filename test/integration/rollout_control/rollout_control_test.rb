@@ -46,36 +46,6 @@ class RolloutControlTest < ActionDispatch::IntegrationTest
     assert_equal 65, $rollout.get(:kittens).percentage
   end
 
-  test "activate new feature" do
-    put '/rollout/features/hamburgers/activate'
-    assert_response :success
-    assert_equal [:hamburgers], $rollout.features
-    assert_equal 100, $rollout.get(:hamburgers).percentage
-  end
-
-  test "activate existing feature" do
-    $rollout.deactivate(:hamburgers)
-    put '/rollout/features/hamburgers/activate'
-    assert_response :success
-    assert_equal [:hamburgers], $rollout.features
-    assert_equal 100, $rollout.get(:hamburgers).percentage
-  end
-
-  test "deactivate existing feature" do
-    $rollout.activate(:bicycle_rocket)
-    put '/rollout/features/bicycle_rocket/deactivate'
-    assert_response :success
-    assert_equal [:bicycle_rocket], $rollout.features
-    assert_equal 0, $rollout.get(:bicycle_rocket).percentage
-  end
-
-  test "deactivate new feature" do
-    put '/rollout/features/bicycle_rocket/deactivate'
-    assert_response :success
-    assert_equal [:bicycle_rocket], $rollout.features
-    assert_equal 0, $rollout.get(:bicycle_rocket).percentage
-  end
-
   test "add group to feature" do
     $rollout.deactivate(:extra_sharp_knives)
     post 'rollout/features/extra_sharp_knives/groups', group: 'experienced_chefs'
