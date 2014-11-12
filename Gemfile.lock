@@ -2,7 +2,7 @@ PATH
   remote: .
   specs:
     rollout_control (0.0.1)
-      rails (>= 4.0)
+      rails (~> 4.0)
       rollout (~> 2.0)
 
 GEM
@@ -97,5 +97,4 @@ PLATFORMS
 DEPENDENCIES
   fakeredis
   pry
-  rollout
   rollout_control!
