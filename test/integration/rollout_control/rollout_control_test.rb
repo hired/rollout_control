@@ -99,6 +99,29 @@ class RolloutControlTest < ActionDispatch::IntegrationTest
     refute rollout.active?(:potato_gun, user(45))
   end
 
+  test "protect API with basic auth" do
+    with_protected_app do
+      get '/rollout/features'
+    end
+    assert_response :unauthorized
+  end
+
+  test "can login with configured username and password" do
+    with_protected_app do
+      get '/rollout/features', {}, env_with_basic_auth
+    end
+    assert_response :success
+  end
+
+  test "unset basic auth username and password does not allow login" do
+    with_protected_app do
+      RolloutControl.basic_auth_username = ''
+      RolloutControl.basic_auth_password = ''
+      get '/rollout/features', {}, env_with_basic_auth
+    end
+    assert_response :unauthorized
+  end
+
   private
 
   def user(id)
@@ -107,5 +130,20 @@ class RolloutControlTest < ActionDispatch::IntegrationTest
 
   def rollout
     RolloutControl.rollout
+  end
+
+  def with_protected_app
+    RolloutControl.unprotected = false
+    RolloutControl.basic_auth_username = 'aaron'
+    RolloutControl.basic_auth_password = 'changeme'
+    yield
+    RolloutControl.unprotected = true
+  end
+
+  def env_with_basic_auth(username = 'aaron', password = 'changeme')
+    {
+      'ACCEPT' => 'application/json',
+      'HTTP_AUTHORIZATION' => "Basic #{Base64::encode64("#{username}:#{password}")}"
+    }
   end
 end
