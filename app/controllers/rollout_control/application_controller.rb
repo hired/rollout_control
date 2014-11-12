@@ -4,7 +4,7 @@ module RolloutControl
     private
 
     def rollout
-      $rollout
+      RolloutControl.rollout
     end
   end
 end
