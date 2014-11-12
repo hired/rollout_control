@@ -11,12 +11,19 @@ class RolloutControlTest < ActionDispatch::IntegrationTest
     rollout.activate(:kittens)
     get '/rollout/features'
     assert_response :success
-    assert_equal ['kittens'], last_json
+    kittens_json = { 'name' => 'kittens', 'percentage' => 100, 'groups' => [], 'users' => [] }
+    assert_equal [kittens_json], last_json
 
-    rollout.activate(:burritos)
+    rollout.activate_percentage(:burritos, 50)
+    rollout.activate_group(:burritos, :burrito_lovers)
+    rollout.activate_user(:burritos, user(35))
     get '/rollout/features'
     assert_response :success
-    assert_equal ['burritos', 'kittens'], last_json.sort
+    features_json = last_json
+    assert_equal 2, features_json.size
+    burritos_json = { 'name' => 'burritos', 'percentage' => 50, 'groups' => ['burrito_lovers'], 'users' => ['35'] }
+    assert features_json.include?(kittens_json)
+    assert features_json.include?(burritos_json)
   end
 
   test "show feature" do

@@ -3,7 +3,10 @@ require_dependency 'rollout_control/application_controller'
 module RolloutControl
   class FeaturesController < ApplicationController
     def index
-      render json: rollout.features.to_json
+      features = rollout.features.map do |feature|
+        rollout.get(feature).to_hash.merge({ name: feature })
+      end
+      render json: features.to_json
     end
 
     def show
