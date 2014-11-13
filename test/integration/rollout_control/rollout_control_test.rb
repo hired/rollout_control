@@ -30,7 +30,7 @@ class RolloutControlTest < ActionDispatch::IntegrationTest
     rollout.activate(:kittens)
     get '/rollout/features/kittens'
     assert_response :success
-    feature_data = { 'percentage' => 100, 'groups' => [], 'users' => [] }
+    feature_data = { 'name' => 'kittens', 'percentage' => 100, 'groups' => [], 'users' => [] }
     assert_equal feature_data, last_json
 
     rollout.activate_percentage(:kittens, 75)

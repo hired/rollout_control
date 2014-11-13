@@ -4,13 +4,13 @@ module RolloutControl
   class FeaturesController < ApplicationController
     def index
       features = rollout.features.map do |feature|
-        rollout.get(feature).to_hash.merge({ name: feature })
+        rollout.get(feature).to_hash.merge(name: feature)
       end
       render json: features.to_json
     end
 
     def show
-      render json: rollout.get(feature)
+      render json: rollout.get(feature).to_hash.merge(name: feature)
     end
 
     def update
