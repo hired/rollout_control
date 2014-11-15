@@ -2,6 +2,8 @@
 
 rollout_control is a JSON/REST API for [rollout](https://github.com/FetLife/rollout).
 
+This enables control of rollout from Hubot with a [Hubot script](https://github.com/hired/hubot-rollout-control). Maybe you can think of some other uses!
+
 ## Installation
 
 Add the gem to your Rails project `Gemfile`:
@@ -57,6 +59,54 @@ RolloutControl.configure do |rc|
   rc.unprotected = true
 end
 ```
+
+### Hubot script installation
+
+Add **hubot-rollout-control** to dependencies in Hubot's `package.json` file:
+
+```json
+"dependencies": {
+  "hubot": ">= 2.6.0",
+  "hubot-scripts": ">= 2.5.0",
+  "hubot-rollout-control": ">= 0.0.2"
+}
+```
+
+Add **hubot-rollout-control** to Hubot's `external-scripts.json`:
+
+```json
+["hubot-rollout-control"]
+```
+
+* Set `HUBOT_ROLLOUT_CONTROL_URL` to point to where you mounted rollout_control. For example: `http://my-super-app.com/rollout`.
+* Set `HUBOT_ROLLOUT_CONTROL_USERNAME` to your configured rollout basic auth username (same as `ROLLOUT_CONTROL_USERNAME` above).
+* Set `HUBOT_ROLLOUT_CONTROL_PASSWORD` to your configured rollout basic auth password (same as `ROLLOUT_CONTROL_PASSWORD` above).
+
+If everything is set up correctly, you can now control rollout with Hubot.
+
+---
+
+**aaron**<br />
+hubot rollout features<br />
+**hubot**<br />
+experimental_feature (0%)<br />
+kittens (50%), groups: [ cat_lovers ], users: [ 14 ]<br />
+**aaron**<br />
+hubot rollout activate experimental_feature<br />
+**hubot**<br />
+experimental_feature has been activated<br />
+**aaron**<br />
+hubot rollout activate_user kittens 75<br />
+**hubot**<br />
+kittens has been activated for user with id 75<br />
+**aaron**<br />
+hubot rollout features<br />
+**hubot**<br />
+experimental_feature (100%)<br />
+kittens (50%), groups: [ cat_lovers ], users: [ 14, 75 ]<br />
+
+---
+
 
 ## License
 
