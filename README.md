@@ -110,4 +110,4 @@ kittens (50%), groups: [ cat_lovers ], users: [ 14, 75 ]<br />
 
 ## License
 
-This project uses MIT licensed. See MIT-LICENSE file for more details.
+rollout_control project is MIT licensed. See MIT-LICENSE file for more details.
