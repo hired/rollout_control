@@ -84,7 +84,7 @@ Add **hubot-rollout-control** to Hubot's `external-scripts.json`:
 
 If everything is set up correctly, you can now control rollout with Hubot.
 
----
+=====
 
 **aaron**<br />
 hubot rollout features<br />
@@ -105,7 +105,7 @@ hubot rollout features<br />
 experimental_feature (100%)<br />
 kittens (50%), groups: [ cat_lovers ], users: [ 14, 75 ]<br />
 
----
+=====
 
 
 ## License
