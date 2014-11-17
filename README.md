@@ -107,6 +107,9 @@ kittens (50%), groups: [ cat_lovers ], users: [ 14, 75 ]<br />
 
 =====
 
+## Open Source by [Hired](https://hired.com/?utm_source=opensource&utm_medium=rollout_control&utm_campaign=readme)
+
+We are Ruby developers ourselves, and we use all of our open source projects in production. We always encourge forks, pull requests, and issues. Get in touch with the Hired Engineering team at _opensource@hired.com_.
 
 ## License
 
