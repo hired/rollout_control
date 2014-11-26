@@ -62,14 +62,10 @@ end
 
 ### Hubot script installation
 
-Add **hubot-rollout-control** to dependencies in Hubot's `package.json` file:
+Add **hubot-rollout-control** to your Hubot (run the following in your Hubot directory):
 
-```json
-"dependencies": {
-  "hubot": ">= 2.6.0",
-  "hubot-scripts": ">= 2.5.0",
-  "hubot-rollout-control": ">= 0.0.2"
-}
+```
+$ npm install --save hubot-rollout-control
 ```
 
 Add **hubot-rollout-control** to Hubot's `external-scripts.json`:
