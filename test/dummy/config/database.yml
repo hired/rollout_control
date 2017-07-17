@@ -1,0 +1,3 @@
+test:
+  adapter: sqlite3
+  database: rollout_control
