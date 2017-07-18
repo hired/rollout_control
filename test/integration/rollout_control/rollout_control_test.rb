@@ -48,21 +48,21 @@ class RolloutControlTest < ActionDispatch::IntegrationTest
 
   test "update feature percentage" do
     rollout.activate(:kittens)
-    patch '/rollout/features/kittens', { percentage: '65' }
+    patch '/rollout/features/kittens', params: { percentage: '65' }
     assert_response :success
     assert_equal 65, rollout.get(:kittens).percentage
   end
 
   test "add group to feature" do
     rollout.deactivate(:extra_sharp_knives)
-    post 'rollout/features/extra_sharp_knives/groups', group: 'experienced_chefs'
+    post '/rollout/features/extra_sharp_knives/groups', params: { group: 'experienced_chefs' }
     assert_equal 0, rollout.get(:extra_sharp_knives).percentage
     assert_equal [:experienced_chefs], rollout.get(:extra_sharp_knives).groups
   end
 
   test "attempt to add group to feature without a group name" do
     rollout.deactivate(:extra_sharp_knives)
-    post 'rollout/features/extra_sharp_knives/groups'
+    post '/rollout/features/extra_sharp_knives/groups'
     assert_response 400
     assert_equal [], rollout.get(:extra_sharp_knives).groups
   end
@@ -70,14 +70,14 @@ class RolloutControlTest < ActionDispatch::IntegrationTest
   test "remove group from feature" do
     rollout.deactivate(:extra_sharp_knives)
     rollout.activate_group(:extra_sharp_knives, :experienced_chefs)
-    delete 'rollout/features/extra_sharp_knives/groups/experienced_chefs'
+    delete '/rollout/features/extra_sharp_knives/groups/experienced_chefs'
     assert_equal 0, rollout.get(:extra_sharp_knives).percentage
     assert_equal [], rollout.get(:extra_sharp_knives).groups
   end
 
   test "add user to feature" do
     rollout.deactivate(:potato_gun)
-    post 'rollout/features/potato_gun/users', user_id: 45
+    post '/rollout/features/potato_gun/users', params: { user_id: 45 }
     assert_equal 0, rollout.get(:potato_gun).percentage
     assert_equal ['45'], rollout.get(:potato_gun).users
     assert rollout.active?(:potato_gun, user(45))
@@ -85,7 +85,7 @@ class RolloutControlTest < ActionDispatch::IntegrationTest
 
   test "attempt to activate user to feature without a user id" do
     rollout.deactivate(:potato_gun)
-    post 'rollout/features/potato_gun/users'
+    post '/rollout/features/potato_gun/users'
     assert_response 400
     assert_equal [], rollout.get(:potato_gun).users
   end
@@ -93,7 +93,7 @@ class RolloutControlTest < ActionDispatch::IntegrationTest
   test "remove user from feature" do
     rollout.deactivate(:potato_gun)
     rollout.activate_user(:potato_gun, user(45))
-    delete 'rollout/features/potato_gun/users/45'
+    delete '/rollout/features/potato_gun/users/45'
     assert_equal 0, rollout.get(:potato_gun).percentage
     assert_equal [], rollout.get(:potato_gun).groups
     refute rollout.active?(:potato_gun, user(45))
@@ -108,7 +108,7 @@ class RolloutControlTest < ActionDispatch::IntegrationTest
 
   test "can login with configured username and password" do
     with_protected_app do
-      get '/rollout/features', {}, env_with_basic_auth
+      get '/rollout/features', headers: env_with_basic_auth
     end
     assert_response :success
   end
@@ -117,7 +117,7 @@ class RolloutControlTest < ActionDispatch::IntegrationTest
     with_protected_app do
       RolloutControl.basic_auth_username = ''
       RolloutControl.basic_auth_password = ''
-      get '/rollout/features', {}, env_with_basic_auth
+      get '/rollout/features', headers: env_with_basic_auth
     end
     assert_response :unauthorized
   end
