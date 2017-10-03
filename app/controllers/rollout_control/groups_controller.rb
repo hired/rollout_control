@@ -23,7 +23,7 @@ module RolloutControl
     end
 
     def group
-      group_param = params[:group] || params[:id]
+      group_param = params[:id] || params[:group]
       group_param.to_sym if group_param
     end
   end
