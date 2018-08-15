@@ -99,6 +99,14 @@ class RolloutControlTest < ActionDispatch::IntegrationTest
     refute rollout.active?(:potato_gun, user(45))
   end
 
+  test "deletes a feature" do
+    rollout.delete(:potato_gun)
+    delete '/rollout/features/potato_gun'
+    assert_equal [], rollout.get(:potato_gun).users
+    assert_equal [], rollout.get(:potato_gun).groups
+    refute rollout.active?(:potato_gun)
+  end
+
   test "protect API with basic auth" do
     with_protected_app do
       get '/rollout/features'
