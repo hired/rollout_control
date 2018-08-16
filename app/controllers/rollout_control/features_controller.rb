@@ -18,6 +18,11 @@ module RolloutControl
       head 204
     end
 
+    def destroy
+      rollout.delete(feature)
+      head 204
+    end
+
     private
 
     def feature
