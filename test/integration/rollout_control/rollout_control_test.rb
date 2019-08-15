@@ -53,6 +53,15 @@ class RolloutControlTest < ActionDispatch::IntegrationTest
     assert_equal 65, rollout.get(:kittens).percentage
   end
 
+  test "update feature data" do
+    rollout.activate(:kittens)
+    patch '/rollout/features/kittens', params: { percentage: '65', data: { foo: 'bar' } }
+    assert_response :success
+    feature = rollout.get(:kittens)
+    assert_equal({ 'foo' => 'bar' }, feature.data)
+    assert_equal(65, feature.percentage)
+  end
+
   test "add group to feature" do
     rollout.deactivate(:extra_sharp_knives)
     post '/rollout/features/extra_sharp_knives/groups', params: { group: 'experienced_chefs' }
