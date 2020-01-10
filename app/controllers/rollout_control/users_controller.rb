@@ -3,8 +3,8 @@ require_dependency 'rollout_control/application_controller'
 module RolloutControl
   class UsersController < ApplicationController
     def create
-      if user
-        rollout.activate_user(feature, user)
+      if user_identifier
+        rollout.activate_user(feature, user_identifier)
         head 204
       else
         head 400
@@ -12,7 +12,7 @@ module RolloutControl
     end
 
     def destroy
-      rollout.deactivate_user(feature, user)
+      rollout.deactivate_user(feature, user_identifier)
       head 204
     end
 
@@ -22,9 +22,8 @@ module RolloutControl
       params[:feature_id].to_sym if params[:feature_id]
     end
 
-    def user
-      user_param = params[:user_id] || params[:id]
-      OpenStruct.new(id: user_param) if user_param
+    def user_identifier
+      (params[:user_id] || params[:id]).presence
     end
   end
 end

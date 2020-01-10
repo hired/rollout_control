@@ -16,12 +16,18 @@ class RolloutControlTest < ActionDispatch::IntegrationTest
 
     rollout.activate_percentage(:burritos, 50)
     rollout.activate_group(:burritos, :burrito_lovers)
-    rollout.activate_user(:burritos, user(35))
+    user_identifier = '4623ed17-6750-4357-9d73-7ac5591761af'
+    rollout.activate_user(:burritos, user_identifier)
     get '/rollout/features'
     assert_response :success
     features_json = last_json
     assert_equal 2, features_json.size
-    burritos_json = { 'name' => 'burritos', 'percentage' => 50, 'groups' => ['burrito_lovers'], 'users' => ['35'] }
+    burritos_json = {
+      'name' => 'burritos',
+      'percentage' => 50,
+      'groups' => ['burrito_lovers'],
+      'users' => [user_identifier],
+    }
     assert features_json.include?(kittens_json)
     assert features_json.include?(burritos_json)
   end
@@ -39,10 +45,11 @@ class RolloutControlTest < ActionDispatch::IntegrationTest
     feature_data['percentage'] = 75
     assert_equal feature_data, last_json
 
-    rollout.activate_user(:kittens, OpenStruct.new(id: 101))
+    user_identifier = '80a8d952-23b3-4b21-8412-5e58e717771c'
+    rollout.activate_user(:kittens, user_identifier)
     get '/rollout/features/kittens'
     assert_response :success
-    feature_data['users'] << '101'
+    feature_data['users'] << user_identifier
     assert_equal feature_data, last_json
   end
 
@@ -77,10 +84,11 @@ class RolloutControlTest < ActionDispatch::IntegrationTest
 
   test "add user to feature" do
     rollout.deactivate(:potato_gun)
-    post '/rollout/features/potato_gun/users', params: { user_id: 45 }
+    user_identifier = '407f7944-af76-4ee0-bed8-8d3ce2d33916'
+    post '/rollout/features/potato_gun/users', params: { user_id: user_identifier }
     assert_equal 0, rollout.get(:potato_gun).percentage
-    assert_equal ['45'], rollout.get(:potato_gun).users
-    assert rollout.active?(:potato_gun, user(45))
+    assert_equal [user_identifier], rollout.get(:potato_gun).users
+    assert rollout.active?(:potato_gun, user_identifier)
   end
 
   test "attempt to activate user to feature without a user id" do
@@ -92,11 +100,15 @@ class RolloutControlTest < ActionDispatch::IntegrationTest
 
   test "remove user from feature" do
     rollout.deactivate(:potato_gun)
-    rollout.activate_user(:potato_gun, user(45))
-    delete '/rollout/features/potato_gun/users/45'
+    user_identifier = '54d5448d-f973-4afc-9084-052024669415'
+    rollout.activate_user(:potato_gun, user_identifier)
+    assert rollout.active?(:potato_gun, user_identifier)
+
+    delete "/rollout/features/potato_gun/users/#{user_identifier}"
+
     assert_equal 0, rollout.get(:potato_gun).percentage
     assert_equal [], rollout.get(:potato_gun).groups
-    refute rollout.active?(:potato_gun, user(45))
+    refute rollout.active?(:potato_gun, user_identifier)
   end
 
   test "deletes a feature" do
@@ -131,10 +143,6 @@ class RolloutControlTest < ActionDispatch::IntegrationTest
   end
 
   private
-
-  def user(id)
-    OpenStruct.new(id: id)
-  end
 
   def rollout
     RolloutControl.rollout
