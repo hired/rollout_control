@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    rollout_control (0.1.2)
+    rollout_control (0.1.3)
       rails
       rollout
 
