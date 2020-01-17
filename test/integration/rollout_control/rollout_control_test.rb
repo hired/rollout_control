@@ -77,7 +77,7 @@ class RolloutControlTest < ActionDispatch::IntegrationTest
   test "remove group from feature" do
     rollout.deactivate(:extra_sharp_knives)
     rollout.activate_group(:extra_sharp_knives, :experienced_chefs)
-    delete '/rollout/features/extra_sharp_knives/groups/experienced_chefs'
+    delete '/rollout/features/extra_sharp_knives/groups/experienced_chefs', as: :json
     assert_equal 0, rollout.get(:extra_sharp_knives).percentage
     assert_equal [], rollout.get(:extra_sharp_knives).groups
   end
