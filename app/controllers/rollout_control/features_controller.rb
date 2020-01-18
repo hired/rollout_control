@@ -14,7 +14,12 @@ module RolloutControl
     end
 
     def update
-      rollout.activate_percentage(feature, params[:percentage]) if params[:percentage]
+      rollout.set_feature_data(feature, data_params) if params[:data]
+
+      if params[:percentage]
+        rollout.activate_percentage(feature, params[:percentage])
+      end
+
       head 204
     end
 
@@ -26,7 +31,11 @@ module RolloutControl
     private
 
     def feature
-      params[:id].to_sym if params[:id]
+      params[:id].to_sym
+    end
+
+    def data_params
+      params.permit(data: {})[:data].to_h
     end
   end
 end
